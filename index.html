@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Meta -->
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clifford Lezark</title>
+  <link rel="shortcut icon" href="Favicon.ico" type="image/x-icon" />
+  <!-- Styles -->
+
+  <link rel="stylesheet" href="index.processed.css" />
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <!-- Page-head component-->
+  <script type="text/x-template" id="page-head">
+    <div class="side">
+        <h3> Clifford Lezark</h3>
+          <p>BS in Marine Science, Eckerd College '18.</p>
+          <p><strong>Likes:</strong> experimental agriculture, hackathons, puppy linux.</p>
+          <p><strong>Dislikes:</strong> unemployment, ocean acidification, boring socks. </p>
+      </div>
+    </script>
+
+  <!-- Work Component -->
+
+  <script type="text/x-template" id="work">
+
+    <div class="list">
+          <div class="blurb">
+              <h1>Projects</h1>
+              <p>Below are the projects I've been worked on since I got my start in programming.
+                  Most of these I no longer actively maintain.
+              </p>
+          </div>
+
+          <dl>
+          <dt v-for="project in projects">
+            <a :href='project.link'><strong>{{ project.name }}</strong></a>: <strong>{{project.date}}</strong>
+            <dd>
+              <p> {{ project.info }}</p>
+           </dd>
+          </dt>
+
+      </dl>
+      </div>
+    </script>
+
+  <!-- Research Component -->
+  <script type="text/x-template" id="research">
+    <div class="list">
+          <div class="blurb">
+              <h1>Research</h1>
+              <p>Although software is my passion, my background is in biological oceanography.
+              Below are the projects I've had the pleasure of being a part of during my undergraduate years.</p>
+          </div>
+          <dl>
+              <dt v-for="research in research">
+                  <a :href="research.link"><strong>{{ research.name }}</strong></a>: <strong>{{ research.date }}</strong>
+                  <dd>
+              <p>{{research.info}}</p>
+          </dd>
+              </dt>
+          </dl>
+      </div>
+    </script>
+
+  <!-- Website -->
+  <div id="demo">
+    <div id="wrapper">
+      <header class="main-head">
+        <img src="fall2018selfie.png" class="responsive" />
+        <page-head></page-head>
+      </header>
+
+      <content class="content">
+        <work v-if="showProjects == true" :projects="projects"></work>
+        <research v-if="showResearch == true" :research="research"></research>
+      </content>
+      <nav class="main-nav">
+        <ul>
+          <li v-on:click="showProjects = !showProjects; showResearch = false">
+            <a href="#">Projects</a>
+          </li>
+          <li v-on:click="showResearch = !showResearch; showProjects = false">
+            <a href="#">Research</a>
+          </li>
+        </ul>
+      </nav>
+
+      <footer class="main-footer">
+        Sorry for not being more talkitive. If you want to chat, call up the
+        request line and <a href="mailto:holla@cliff.fish">holla at me!</a>
+      </footer>
+    </div>
+  </div>
+  <!-- Scripts -->
+  <script src="scripts/components.js"></script>
+  <script src="scripts/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!-- Code written by Cliff Lezark and Andrew Friedman  -->
+<!-- CS 411 Final Project  -->
+<!-- Pledged, Cliff and Andrew -->
+
+<!-- Note: this is the HTML and JavaScript that makes the app tick. -->
+
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+    <meta charset="utf-8">                                                                         <!-- Housekeeping -->
+    <meta name="viewport" content="width=device-width">                                            <!-- Housekeeping -->
+</head>
+
+<body>                                                                                  <!-- Where the magic happens -->
+<div id='app'>                                    <!-- Everything in this div tag is controlled by the Vue code below-->
+    <h1>SJF CPU Scheduler</h1>
+    <input type="text" v-model="user.name" value="r">                                                 <!-- Name Input-->
+    <input type="number" id="processLength" v-on:keyup.enter="submitHandler" v-model="user.time" min="1" max="9" value="1">           <!-- Time Input -->
+    <input type="submit" v-on:click="submitHandler">                                                <!--Submit Button-->
+  <!--  <p> Request Name: {{user.name}} </p> Debug note: this p tag shows you if data-binding works or not -->
+  <!--  <p> Request Time: {{user.time}} </p> Debug note: this p tag shows you if data-binding works or not -->
+<br>
+
+    <p> Inputs: {{inputsPermanent}} </p>                                               <!-- Displays the user inputs -->
+    <p> queue: {{objectSort}} </p>                                               <!-- Displays the user inputs -->
+
+    <input type="button" value="SJF" v-on:click="toggle">               <!-- This button activates the SJF scheduler -->
+    <p v-show="reveal"> Output: {{outputs}} </p>                  <!-- The proverbial pudding which holds the proof  -->
+                                                             <!-- This p tag displays the output of the SJF algorithm-->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.3/vue.min.js"></script>  <!-- Delivers Vue.JS to the app -->
+
+<script>
+    let vv = new Vue({               //This is the beginning of the JavaScript Code/Vue instance
+        el: '#app',                  //Everything in this Vue instance applies specifically to the div called "app"
+        data: function() {           //This is where all of the global variables are initialized and declaered
+            return {
+                user: {              //// Our input object!
+                    name: "",        //// It contains two values: one for identification and one for program operation
+                    time: 1
+                },
+                inputs: [],          ////// The mutable version of our inputs (what we do math with)
+                inputsPermanent: [], ////// The immutable version of our inputs (what you see on the web page)
+                outputs: [],         ////// Where completed processes are sent to be displayed
+                runningProcess: [],  ////// Where the shortest job of the moment is stored during processing
+                timers: [],
+                reveal: true,       ////// Boolean controlling the render state of the outputs
+
+
+            }
+        },                                                   // Methods are functions which must be explicitly called
+        methods: {
+            inputs: function (a) {                           //// This function gets the shortest job from the input
+                console.log("inputs changed") ;              //// array (after sorting it), removes it from that array,
+               if(this.inputs.length >=1 ) {                 //// and moves it to the runningProcess array.
+                   console.log('input has changed');
+                   this.objectSort();
+                   this.runningProcess = this.inputs.shift();
+                   return this.runningProcess;
+               }
+            },
+            toArray: function(event) {                       //// This function submits the user's input to two arrays
+                this.inputs.push({
+                    time: this.user.time,
+                    name: this.user.name
+                });
+                this.inputsPermanent.push({
+                    time: this.user.time,
+                    name: this.user.name
+                });
+                this.$forceUpdate(); // updates the data for vue since pushing doesn't...
+            },
+            toggle: function (event) {                       //// This function toggles the state of the SJF output
+               this.reveal = !this.reveal;                   //// It also calls for the SJF function to be ran.
+               this.showIt();
+            },
+            resetLength: function(event) {                   //// This function clears the user.time input field
+                this.user.time = 1;
+            },
+            resetName: function(event) {                     //// This function clears the user.name input field
+                this.user.name = "";
+            },
+
+            submitHandler: function(event) {                 //// This function handles all of the input-related methods
+                if (this.user.time < 1 || this.user.time > 9) {
+                    this.user.time = 1;
+                    return;
+                }
+                this.toArray();
+                this.resetName();
+                this.resetLength();
+                this.showIt();
+
+            },
+            showIt: function(){                                     //// This is the heart of the SJF Algorithm.
+                console.log("ss running");                          //// it loops through the sorted inputs after the
+                //this.resetSJF();
+                let counter = 0;                                    //// first process has run ensures that subsequent
+                if (this.timers.length == 1) return;
+
+               // for(let i = 0; i < this.objectSort.length; i++){    //// processes are run in the correct order.
+
+                    let cur = this.objectSort[0];
+                    counter += parseInt(cur.time);
+                    console.log(counter);
+
+                    let timer = setTimeout(function(){          ////// This function is the actual "processing" step
+                        vv.outputs.push(cur);
+                        vv.searchAndDestroy(vv.inputs, cur);
+                        vv.timers.pop();
+                         vv.showIt();
+                        console.log("added done");              //////
+                    }, counter * 1000);                         ////// setTimeout works in milliseconds, hence the math
+                    this.timers.push(timer);
+
+                //}
+                //this.outputs = [];
+                console.log(this.outputs);
+                console.log(this.objectSort);
+            },
+            resetSJF: function() {
+                for (let i = 0; i < this.timers.length; i++) {
+                    clearTimeout(this.timers[i]);
+                }
+                this.timers = [];
+                this.outputs = [];
+            },
+            searchAndDestroy: function (array, process) {
+                for (let i = 0; i < array.length; i++) {
+                    if (array[i].name == process.name && array[i].time == process.time) {
+                        array.splice(i, 1);
+                        break;
+                    }
+                }
+
+    }
+
+
+        },
+        computed: {                    // computed properties are continuously updated as their component values change
+            objectSort: function(event) {           //// Sorts the array of objects from lowest to highest length value
+                return this.inputs.sort((a, b) => {return a.time - b.time;});
+            }
+        }
+    });
+
+
+</script>
+
+
+</body>
+</html>

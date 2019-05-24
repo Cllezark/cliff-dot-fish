@@ -1,0 +1,149 @@
+* {
+  box-sizing: border-box;
+}
+
+
+img {
+  display: block;
+  border-radius: 50%;
+
+}
+
+.responsive {
+  width: 100%;
+  height: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+
+
+#wrapper {
+  max-width: 1024px;
+  margin: 0 auto;
+  font-family: sans-serif, arial;
+  letter-spacing: 2px;
+  font-weight: light;
+  text-align: left;
+}
+
+#wrapper>* {
+  border: 2px solid #ffffff;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+nav ul {
+  display: flex;
+  justify-content: space-between;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  background-color: aquamarine;
+  text-decoration: none;
+
+  padding: 4px;
+  margin: 4px;
+}
+
+
+/** mobile view **/
+
+#wrapper>main-nav {
+  grid-area: nav;
+}
+
+#wrapper>main-head {
+  grid-area: header;
+}
+
+#wrapper>content {
+  grid-area: content;
+
+}
+
+#wrapper>main-footer {
+  grid-area: footer;
+}
+
+#wrapper {
+  display: grid;
+  grid-gap: 10px;
+
+  grid-template-areas:
+    "header"
+    "nav"
+    "content"
+    "footer";
+}
+
+/** desktop view **/
+@media (min-width: 500px) {
+
+  #wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "header content content content"
+      "nav content content  content"
+      ". content  content content"
+      "footer  content  content content";
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+
+
+
+
+}
+
+/** XL view **/
+@media (min-width: 1000px) {
+
+  #wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "header content content content content  content"
+      "nav content content  content content  content"
+      ". content  content content  content  content"
+      "footer  content  content content  content  content";
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+
+}
